@@ -1,0 +1,393 @@
+
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amssymb}
+\usepackage{eurosym}
+\usepackage{amsmath}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.00.0.2552}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{Created=Thursday, December 14, 2000 09:16:34}
+%TCIDATA{LastRevised=Tuesday, March 30, 2004 21:19:50}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Articles\SW\Elbert Walker's">}
+%TCIDATA{Language=American English}
+%TCIDATA{CSTFile=LaTeX article (bright).cst}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\def\Pr{\mbox{Pr}}
+\def\V{\mbox{V}}
+\def\Cov{\mbox{Cov}}
+\def\E{\mbox{E}}
+\def\C{\mbox{C}}
+\def\Var{\mbox{Var}}
+\def\R{\underline{R}}
+\def\x{\underline{x}}
+\def\S{\underline{S}}
+\def\1{\mbox{{\bf 1\kern-.24em{I}}}}
+\def\R{R}
+\def\SE{\mbox{SE}}
+\def\Sk{\mbox{Sk}}
+\def\Ku{\mbox{Ku}}
+\def\Rc{{\cal R}}
+\def\G#1#2{\Gamma\left(\frac{#1}{#2}\right)}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\evensidemargin}{-1cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\textheight}{3cm}
+\renewcommand{\baselinestretch}{1.4}
+\input{tcilatex}
+
+\begin{document}
+
+\title{FAME: Applied Econometrics\\
+Lecture Note\\
+The Kalman Filter}
+\author{Michael Rockinger}
+\maketitle
+
+The following section is heavily inspired by Thierry Roncalli's book:
+``Applications \`{a} la Finance et \`{a} l'Econom\'{e}trie\textquotedblright
+, Volume 2\textquotedblright , the book by Andrew Harvey:\ ``Forecasting
+structural time series models and the Kalman filter\textquotedblright ,
+Cambridge University Press, as well as on the section concerning the Kalman
+filter in Gourieroux and Monfort's book on econometrics. We will use the
+same notation as in Harvey. For copyright reasons this document should not
+circulate beyond the FAME course.
+
+\section{The state-space model}
+
+A state-space model consists in a measurement equation linking actual
+observations with latent variables. These latent variables may be seen as
+defining a given state in which the observations are in. It is assumed that
+the state variables are a first order Markov process. This is without loss
+of generality since a higher order Markov process may be transformed into a
+first order process by augmenting the parameters characterizing a state. We
+denote this state vector by $\alpha _{t}$. We have%
+\begin{equation*}
+\alpha _{t}=T_{t}\alpha _{t-1}+c_{t}+R_{t}\eta _{t},\qquad t=1,...,\tau ,
+\end{equation*}
+
+where $\alpha _{t}$ is the $m$ dimensional state vector. $T_{t}$ is an $%
+m\times m$ matrix. $c_{t}$ is an $m$ $\times $ $1$ vector and $R_{t}$ is $m$
+$\times $ $g$.
+
+The measurement equation is given by
+
+\begin{equation*}
+y_{t}=Z_{t}\alpha _{t}+d_{t}+\varepsilon _{t},\qquad t=1,...,T,
+\end{equation*}
+
+where $y_{t}$ is a given time-series with $N$ $\times $ $1$ elements. $Z_{t}$
+is an $n$ $\times $ $\ m$ matrix, $d_{t}$ an $N$ $\times $ $1$ vector. $\eta
+_{t}$ and $\varepsilon _{t}$ are supposed to be white noise with dimensions $%
+g$ $\times $ $1$ and $N$ $\times $ $1$. Both $\eta _{t}$ and $\varepsilon
+_{t}$ are supposed to be normally distributed with $0$ correlation which is
+equivalent to assuming independance of the two. The first two moments are
+given as follows:%
+\begin{eqnarray*}
+E[\eta _{t}] &=&0\text{ and }V[\eta _{t}]=Q_{t}, \\
+E[\varepsilon _{t}] &=&0\text{ and }V[\varepsilon _{t}]=H_{t}.
+\end{eqnarray*}
+
+We also assume that, initially, the state vector follows a Gaussian
+distribution with mean $E[\alpha _{0}]=a_{0}$ and $V[\alpha _{0}]=P_{0}$
+
+Consider $a_{t}$ the best estimate of $\alpha _{t}$ given all available
+information up to time $t$, meaning that%
+\begin{equation*}
+a_{t}=E_{t}[\alpha _{t}],
+\end{equation*}
+
+and the variance-covariance matrix associated to $a_{t}$ is given by%
+\begin{equation*}
+P_{t}=E_{t}[(a_{t}-\alpha _{t})(a_{t}-\alpha _{t})^{\prime }]
+\end{equation*}
+
+\section{The filter}
+
+\subsection{Mathematical analysis.}
+
+The Kalman filter is given by the following recursive equations:%
+\begin{eqnarray*}
+a_{t\mid t-1} &=&T_{t}a_{t-1}+c_{t}, \\
+P_{t\mid t-1} &=&T_{t}P_{t-1}T_{t}^{^{\prime }}+R_{t}Q_{t}R_{t}^{^{\prime }},
+\\
+\widetilde{y}_{t\mid t-1} &=&Z_{t}a_{t|t-1}+d_{t}, \\
+v_{t} &=&y_{t}-\widetilde{y}_{t\mid t-1}, \\
+F_{t} &=&Z_{t}P_{t\mid t-1}Z_{t}^{^{\prime }}+H_{t}, \\
+a_{t} &=&a_{t\mid t-1}+P_{t\mid t-1}Z_{t}^{^{\prime }}F_{t}^{-1}v_{t}, \\
+P_{t} &=&(I_{m}-P_{t\mid t-1}Z_{t}^{^{\prime }}F_{t}^{-1}Z_{t})P_{t\mid t-1}.
+\end{eqnarray*}
+where $a_{t\mid t-1}$ and $P_{t\mid t-1}$ are the best estimates
+of $\alpha
+_{t}$ and $P_{t}$ conditionally on all the information available at time $%
+t-1 $. The process $v_{t}$ is the difference between the actual observation
+and its best predictor. This process is also called the innovation.
+
+The log-likelihood of the observation at time $t$ corresponds to%
+\begin{equation*}
+l_{t}=-N/2\text{ln}(2\pi )-1/2\text{ln}\mid F_{t}\mid -1/2v_{t}^{\prime
+}F_{t}^{-1}v_{t}
+\end{equation*}
+where $\mid F_{t}\mid $ is the determinant of $F_{t}$.
+
+\subsection{Implementation.}
+
+For the case where all the matrices and vectors $T_{t,}$ $l_{t},$ $R_{t},$ $%
+Z_{t},$ $d_{t},$ $Q_{t}$ and $H_{t}$ are time-invariant, then the
+implementation of the formulas is straightforward. One only needs to store
+the matrices as is. Whenever the matrices and vectors are variable through
+time, then the implementation is slightly more involved because of a storage
+problem. For instance, to define $T_{t}$ for $t=1,...,T$ we need to store $%
+T_{t}$ for each of the time periods. Roncalli solves the problem by stocking
+vertically the various matrices in a new matrix, say $M$ of dimensions $T$ $%
+\times $ $(m\times m)$ where the $i$-th line of $M$ contains the various
+rows of $T_{t}$. The instruction defining line $i$ of $M$ is%
+\begin{equation*}
+M\text{(i,:)=\texttt{vecr}(T}_{t}\text{)}^{\prime }.
+\end{equation*}%
+The \texttt{vecr} operator is implemented in LeSage's toolbox. You
+may wish to download this toolbox if you have not done it already.
+A parameter \texttt{timevar} should indicate $(=1)$ if the
+matrices are time varying or not.
+
+The implementation also adjusts $F_{t}$ in the case that this matrix is zero.
+
+The program \texttt{Kalman\_filter.m} implements the filter. For larger
+applications, it is recommended to run some compiled code. A few years ago,
+it was nearly impossible to estimate univariate models with more than a few
+hundred observations. In 2004 I\ estimated a model with some 10'000
+observations in 5 minutes.
+
+\section{Forecasting in a state-space model.}
+
+The forecast of $y_{t}$, for $t\geqslant t_{0}$ is given by the following
+recursive equations%
+\begin{eqnarray*}
+a_{t_{0}+l\mid t_{0}} &=&T_{t_{0}+l}a_{t_{0}+l-1\mid t_{0}}+c_{t_{0}+l}, \\
+P_{t_{0}+l\mid t_{0}} &=&T_{t_{0}+l}P_{t_{0}+l-1\mid
+t_{0}}T_{t_{0}+l}^{^{\prime }}+R_{t_{0+l}}Q_{t_{0+l}}R_{t_{0}+l}^{\top }, \\
+\widehat{y}_{t_{0}+l\mid t_{0}} &=&Z_{t_{0}+l}a_{t_{0}+l\mid
+t_{0}}+d_{t_{0}+l}.
+\end{eqnarray*}
+And the mean square error of the forecast on
+$\widehat{y}_{t_{0}+l\mid
+t_{0}} $ is given by%
+\begin{equation*}
+MSE(\widehat{y}_{t_{0}+l\mid
+t_{0}})=Z_{t_{0}+l}P_{t_{0}+l|t_{0}}Z_{t_{0}+l}^{\prime }+H_{t_{0}+l}.
+\end{equation*}
+The implementation of this problem is straightforward and may be
+found in the Matlab module \texttt{Kalman\_forecasting.m}.
+
+\section{Smoothing}
+
+By smoothing is meant the estimation of past values given all the available
+information. The name \textit{smoother} comes from the fact that the
+estimated series look much smoother than the just filtered series... You
+will see this in the empirical implementation.
+
+The smoothing equations are given by%
+\begin{eqnarray*}
+P_{t}^{\ast } &=&P_{t}T_{t+1}^{^{\prime }}P_{t+1\mid t}^{-1}, \\
+a_{t\mid \tau } &=&a_{t}+P_{t}^{\ast }(a_{t+1\mid \tau }-a_{t+1\mid t}), \\
+P_{_{t\mid \tau }} &=&P_{t}+P_{t}^{\ast }(P_{t+1\mid \tau }-P_{t+1\mid
+t})P_{t}^{\ast ^{\prime }}.
+\end{eqnarray*}%
+Notice that the smoother actually works backwards, starting from
+$\tau $ and going back to 1.
+
+Again, the implementation is easy. See also \texttt{Kalman\_Smoothing.m}.
+
+\section{Simulation}
+
+The simulation of the Kalman filter is very easy. It boils down to a
+recursive series simulation. In certain situations such as the estimation of
+stochastic volatility models, the estimation may be more involved since the
+normality of the innovations may be challenged. Stochastic volatility models
+also involve more complex estimation techniques, based on a Bayesian
+paradigm. These techniques usually involve the Kalman filter. See \texttt{%
+Kalman\_Simulation.m} for a simulation code.
+
+\section{Uses of the Kalman filter}
+
+In this section we follow Harvey (1989) for the models and we follow
+Roncalli for the programs. Once these examples are well understood, the
+reader may adapt the programs for his own purposes and use data that is
+specific to his own research.
+
+\subsection{Local level / Random walk with noise}
+
+This model is written as%
+\begin{eqnarray*}
+y_{t} &=&\mu _{t}+\varepsilon _{t},\qquad \qquad E[\varepsilon
+_{t}]=0,\qquad V[\varepsilon _{t}]=\sigma _{\varepsilon }^{2}, \\
+\mu _{t} &=&\mu _{t-1}+\eta _{t},\qquad E[\eta _{t}]=0,\qquad V[\eta
+_{t}]=\sigma _{\eta }^{2}.
+\end{eqnarray*}%
+Both $\varepsilon _{t}$ and $\eta _{t}$ are supposed to be
+independent.
+
+It is very easy to write this problem as a state-space model:%
+\begin{eqnarray*}
+y_{t} &=&1\times \mu _{t}+0+\varepsilon _{t}, \\
+\mu _{t} &=&1\times \mu _{t-1}+0+1\times \eta _{t}.
+\end{eqnarray*}
+Hence, $y_{t}=y_{t},$ $Z_{t}=1,$ $d_{t}=0,$ $H_{t}=\sigma _{\varepsilon
+}^{2},$ $\alpha _{t}=\mu _{t},$ $T_{t}=1,$ $c_{t}=0,$ $R_{t}=1,$ $%
+Q_{t}=\sigma _{\eta }^{2}.$
+
+Obviously, all the vectors and matrices are constant, hence, there
+is no time variation. The parameters that need to be estimated are
+$\sigma _{\varepsilon }^{2}$ and $\sigma _{\eta }^{2}$. Various
+possibilities exist to estimate $a_{0}$ and $P_{0}$. We set
+$a_{0}=y_{1}$ and $P_{0}=0$. It is easy to estimate the parameters
+with maximum likelihood.
+
+An implementation of the problem may be found in
+\texttt{KLocal.m}.
+
+Notice that $(y_{t}-\widehat{\mu }_{t})/\widehat{\sigma }_{\varepsilon }$
+should be distributed iid normal with zero mean and unit variance. A test of
+goodness of fit can be built on this.
+
+\subsection{Local linear trend}
+
+This model is written as
+\begin{eqnarray*}
+y_{t} &=&\mu _{t}+\varepsilon _{t},\qquad \qquad \qquad E[\varepsilon
+_{t}]=0,\qquad V[\varepsilon _{t}]=\sigma _{\varepsilon }^{2}, \\
+\mu _{t} &=&\mu _{t-1}+\beta _{t-1}+\zeta _{1t},\qquad E[\zeta
+_{1t}]=0,\qquad V[\zeta _{1t}]=\sigma _{\zeta _{1}}^{2}, \\
+\beta _{t} &=&\beta _{t-1}+\zeta _{2t},\qquad \qquad E[\zeta _{2t}]=0,\qquad
+V[\zeta _{2t}]=\sigma _{\zeta _{2t}}^{2}.
+\end{eqnarray*}
+All the sources of uncertainty $\varepsilon _{t}$, $\zeta _{1t}$,
+and $\zeta _{2t}$ are assumed to be independent. Now, we may cast
+the model in the
+state-space representation. This gives%
+\begin{eqnarray*}
+y_{t} &=&[1\qquad 0]\QATOPD[ ] {\mu _{t}}{\beta _{t}}+0+\varepsilon _{t}, \\
+\QATOPD[ ] {\mu _{t}}{\beta _{t}} &=&\left[
+\begin{array}{cc}
+1 & 1 \\
+0 & 1%
+\end{array}%
+\right] \QATOPD[ ] {\mu _{t-1}}{\beta _{t-1}}+0+\eta _{t}
+\end{eqnarray*}
+Hence,
+\begin{eqnarray*}
+y_{t} &=&y_{t}, \\
+Z_{t} &=&[1\text{ }0], \\
+d_{t} &=&0, \\
+H_{t} &=&\sigma _{\varepsilon }^{2}, \\
+\alpha _{t} &=&[\mu _{t}\text{ }\beta _{t}]^{\prime }, \\
+T_{t} &=&\left[
+\begin{array}{cc}
+1 & 1 \\
+0 & 1%
+\end{array}%
+\right] , \\
+c_{t} &=&\QATOPD[ ] {0}{0}, \\
+R_{t} &=&\left[
+\begin{array}{cc}
+1 & 0 \\
+0 & 1%
+\end{array}%
+\right] , \\
+Q_{t} &=&\left[
+\begin{array}{cc}
+\sigma _{\zeta _{1}}^{2} & 0 \\
+0 & \sigma _{\zeta _{2}}^{2}%
+\end{array}%
+\right] .
+\end{eqnarray*}
+The parameters to be estimated are $\sigma _{\varepsilon
+}^{2},\sigma _{\zeta _{1}}^{2}$, and $\sigma _{\zeta _{2}}^{2}$.
+Again, the estimation may be easily done with maximum likelihood.
+One may use as initial values
+\begin{equation*}
+a_{0}=\QATOPD[ ] {y(1)}{0}\text{ and }P_{0}=\left[
+\begin{array}{cc}
+0 & 0 \\
+0 & 0%
+\end{array}%
+\right] ,
+\end{equation*}%
+which boils down to using a non-informative prior, in bayesian-speak.
+
+\subsection{Linear model with time varying parameters.}
+
+This model may be written as%
+\begin{eqnarray*}
+y_{t} &=&x_{t}^{\prime }\beta _{t}+\varepsilon _{t},\qquad E[\varepsilon
+_{t}]=0,\qquad V[\varepsilon _{t}]=\sigma _{\varepsilon }^{2}, \\
+\beta _{t} &=&\beta _{t-1}+\eta _{t},\qquad E[\eta _{t}]=0,\qquad V[\eta
+_{t}]=\left[
+\begin{array}{cc}
+\sigma _{\zeta _{1}}^{2} & 0 \\
+0 & \sigma _{\zeta _{2}}^{2}%
+\end{array}%
+\right] .
+\end{eqnarray*}
+Here, we have set up the model for the case where we have 2
+parameters. Obviously, the model may be extended to the situation
+where there are more parameters and where there is some dependency
+between the parameters.
+
+In this model, the parameters are integrated processes which means that they
+will be ``smooth\textquotedblright\ series. The expected value of $\beta
+_{t} $ is affected by the initial values $\beta _{0}$. Hence, for this
+model, the starting values for the drift are very important and need to be
+estimated.
+
+The model is again easy to be cast into the setting of the state-space
+model. Here%
+\begin{eqnarray*}
+y_{t} &=&y_{t}, \\
+Z_{t} &=&x_{t}^{\prime }, \\
+\alpha _{t} &=&\beta _{t}, \\
+d_{t} &=&0, \\
+T_{t} &=&\left[
+\begin{array}{cc}
+1 & 1 \\
+0 & 1%
+\end{array}%
+\right] , \\
+Q_{t} &=&\left[
+\begin{array}{cc}
+\sigma _{\zeta _{1}}^{2} & 0 \\
+0 & \sigma _{\zeta _{2}}^{2}%
+\end{array}%
+\right] .
+\end{eqnarray*}
+The parameters to be estimated are $\theta =(\sigma _{\varepsilon
+}^{2},\sigma _{\zeta _{1}}^{2},\sigma _{\zeta _{2}}^{2},\beta _{0})$. (where
+$\beta _{0}$ has, for the way the problem is set up, two components) Again,
+maximum likelihood may be used for an estimation.
+\end{document}

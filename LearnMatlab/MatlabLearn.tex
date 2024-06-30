@@ -1,0 +1,1725 @@
+
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{eurosym}
+\usepackage{amsmath}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.00.0.2552}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{Created=Thursday, December 14, 2000 09:16:34}
+%TCIDATA{LastRevised=Sunday, January 16, 2005 11:38:10}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Articles\SW\Elbert Walker's">}
+%TCIDATA{Language=American English}
+%TCIDATA{CSTFile=LaTeX article (bright).cst}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\def\Pr{\mbox{Pr}}
+\def\V{\mbox{V}}
+\def\Cov{\mbox{Cov}}
+\def\E{\mbox{E}}
+\def\C{\mbox{C}}
+\def\Var{\mbox{Var}}
+\def\R{\underline{R}}
+\def\x{\underline{x}}
+\def\S{\underline{S}}
+\def\1{\mbox{{\bf 1\kern-.24em{I}}}}
+\def\R{R}
+\def\SE{\mbox{SE}}
+\def\Sk{\mbox{Sk}}
+\def\Ku{\mbox{Ku}}
+\def\Rc{{\cal R}}
+\def\G#1#2{\Gamma\left(\frac{#1}{#2}\right)}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\evensidemargin}{-1cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\textheight}{3cm}
+\renewcommand{\baselinestretch}{1.4}
+\input{tcilatex}
+
+\begin{document}
+
+\title{Some notes that should help to learn Matlab}
+\author{Michael Rockinger}
+\maketitle
+
+\section{Introduction}
+
+Computer programs:\ -Matlab/Gauss
+
+\qquad \qquad \qquad \qquad \qquad -Eviews/Rats
+
+\qquad \qquad \qquad \qquad \qquad -S+/R
+
+\qquad \qquad \qquad \qquad \qquad -Stata/Sas
+
+\qquad \qquad \qquad \qquad \qquad -Ad hoc modules - extreme value theory
+
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad -Lesage
+Econometric toolbox
+
+\qquad \qquad \qquad \qquad \qquad \qquad
+http://www.spatial-econometrics.com/
+
+\qquad \qquad \qquad \qquad \qquad - C/C++ (for instance to write DLLs,
+Bayesian analysis)
+
+Historical background (Eispack/Linpack - now Lapack)
+
+\section{Matlab}
+
+\subsection{\protect\bigskip Command window}
+
+format long
+
+format short
+
+format bank\qquad \qquad \% two decimals
+
+\bigskip get(0,'Format') \qquad \% object oriented programming
+
+clc
+
+clear
+
+clear name
+
+\bigskip
+
+help
+
+ver
+
+whos
+
+diary
+
+\subsection{Editor}
+
+\subsubsection{basic matrix instructions}
+
+\qquad \qquad
+
+\textbf{learning1.m}
+
+\texttt{\TEXTsymbol{>}\TEXTsymbol{>} }
+
+\texttt{echo on \%also write intstructions on screen}
+
+\texttt{A=[ 1 2 3; 4 5 6] \% creates a Matrix}
+
+\texttt{A =}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{\ 4.00 5.00 6.00}
+
+\texttt{b=[88; 99]; \% notice the difference due to ;}
+
+\texttt{disp('a column vector');}
+
+\texttt{a column vector}
+
+\texttt{b}
+
+\texttt{b =}
+
+\texttt{\ 88.00}
+
+\texttt{\ 99.00}
+
+\texttt{fprintf('another way to print b but using formatted output. b=\%12.4f%
+\TEXTsymbol{\backslash}n',b);}
+
+\texttt{another way to print b but using formatted output. b= 88.0000}
+
+\texttt{another way to print b but using formatted output. b= 99.0000}
+
+\texttt{disp('what is the precision of Matlab');}
+
+\texttt{what is the precision of Matlab}
+
+\texttt{fprintf('pi=\%25.20f',pi);}
+
+\texttt{pi= 3.14159265358979310000}
+
+\texttt{A(:,1) \% the first column of A}
+
+\texttt{ans =}
+
+\texttt{\ 1.00}
+
+\texttt{\ 4.00}
+
+\texttt{A(2,:) \% the second row of A}
+
+\texttt{ans =}
+
+\texttt{\ 4.00 5.00 6.00}
+
+\texttt{A(1,3) \% an element out of A}
+
+\texttt{ans =}
+
+\texttt{\ 3.00}
+
+\texttt{A(2,2:3)=[-2 -3]; \% replace blocks in A}
+
+\texttt{A}
+
+\texttt{A =}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{\ 4.00 -2.00 -3.00}
+
+\texttt{B=[1 7 3 ; 5 6 7] \% another matrix}
+
+\texttt{B =}
+
+\texttt{\ 1.00 7.00 3.00}
+
+\texttt{\ 5.00 6.00 7.00}
+
+\texttt{B' \%transpose of B}
+
+\texttt{ans =}
+
+\texttt{\ 1.00 5.00}
+
+\texttt{\ 7.00 6.00}
+
+\texttt{\ 3.00 7.00}
+
+\texttt{C=B'*A \%yet another matrix}
+
+\texttt{C =}
+
+\texttt{\ 21.00 -8.00 -12.00}
+
+\texttt{\ 31.00 2.00 3.00}
+
+\texttt{\ 31.00 -8.00 -12.00}
+
+\texttt{5*C \% multiply a matrix by a scalar}
+
+\texttt{ans =}
+
+\texttt{\ 105.00 -40.00 -60.00}
+
+\texttt{\ 155.00 10.00 15.00}
+
+\texttt{\ 155.00 -40.00 -60.00}
+
+\texttt{D=[A;B] \% vertical concatenation (combine vertically A and B)}
+
+\texttt{D =}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{\ 4.00 -2.00 -3.00}
+
+\texttt{\ 1.00 7.00 3.00}
+
+\texttt{\ 5.00 6.00 7.00}
+
+\texttt{D=[A B] \% horizontal concatenation}
+
+\texttt{D =}
+
+\texttt{\ Columns 1 through 4 }
+
+\texttt{\ 1.00 2.00 3.00 1.00}
+
+\texttt{\ 4.00 -2.00 -3.00 5.00}
+
+\texttt{\ Columns 5 through 6 }
+
+\texttt{\ 7.00 3.00}
+
+\texttt{\ 6.00 7.00}
+
+\texttt{A.*B \% Haddamar product (element by element product)}
+
+\texttt{ans =}
+
+\texttt{\ 1.00 14.00 9.00}
+
+\texttt{\ 20.00 -12.00 -21.00}
+
+\texttt{E=[] \% an empty matrix}
+
+\texttt{E =}
+
+\texttt{\ []}
+
+\texttt{E=[E;A;A] \%concatenate matrices (useful to store results in E)}
+
+\texttt{E =}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{\ 4.00 -2.00 -3.00}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{\ 4.00 -2.00 -3.00}
+
+\texttt{A+B \%sum of matrices}
+
+\texttt{ans =}
+
+\texttt{\ 2.00 9.00 6.00}
+
+\texttt{\ 9.00 4.00 4.00}
+
+\texttt{A-B \% difference of matrices}
+
+\texttt{ans =}
+
+\texttt{\ 0 -5.00 0}
+
+\texttt{\ -1.00 -8.00 -10.00}
+
+\texttt{a=A(1,:)}
+
+\texttt{a =}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{b=B(:,2)}
+
+\texttt{b =}
+
+\texttt{\ 7.00}
+
+\texttt{\ 6.00}
+
+\texttt{[r,c]=size(A) \%rows and columns of A}
+
+\texttt{r =}
+
+\texttt{\ 2.00}
+
+\texttt{c =}
+
+\texttt{\ 3.00}
+
+\texttt{size(A,1) \% row dimension of A}
+
+\texttt{ans =}
+
+\texttt{\ 2.00}
+
+\texttt{size(A,2) \% column dimension of A}
+
+\texttt{ans =}
+
+\texttt{\ 3.00}
+
+\texttt{\% notice: a.*b would return a mistake}
+
+\texttt{kron(a,b)}
+
+\texttt{ans =}
+
+\texttt{\ 7.00 14.00 21.00}
+
+\texttt{\ 6.00 12.00 18.00}
+
+\texttt{clear a}
+
+\texttt{\%just typing a returns an error}
+
+\texttt{A=1:3 \% creates a sequence for A. Notice A is a row!!!}
+
+\texttt{A =}
+
+\texttt{\ 1.00 2.00 3.00}
+
+\texttt{A(end)}
+
+\texttt{ans =}
+
+\texttt{\ 3.00}
+
+\texttt{A(end-1)}
+
+\texttt{ans =}
+
+\texttt{\ 2.00}
+
+\texttt{B='I am a string of characters'}
+
+\texttt{B =}
+
+\texttt{I am a string of characters}
+
+\texttt{C='; lots of them'}
+
+\texttt{C =}
+
+\texttt{; lots of them}
+
+\texttt{D=[B C] \% horizontal concatenation}
+
+\texttt{D =}
+
+\texttt{I am a string of characters; lots of them}
+
+\texttt{S=char(128) \% the Euro}
+
+\texttt{S =}
+
+\texttt{\euro }
+
+\texttt{D=[D ' ' S] }
+
+\texttt{D =}
+
+\texttt{I am a string of characters; lots of them \euro }
+
+\texttt{E=strvcat(B,'Yes') \% vertical concatenation. Notice padding}
+
+\texttt{E =}
+
+\texttt{I am a string of characters}
+
+\texttt{Yes }
+
+\texttt{disp(E)}
+
+\texttt{I am a string of characters}
+
+\texttt{Yes }
+
+\texttt{E=strcat(B,' No') \% equivalent to [B ' No']. Emphasis on string
+operation}
+
+\texttt{E =}
+
+\texttt{I am a string of characters No}
+
+\texttt{double('A') \% to go from char to integer}
+
+\texttt{ans =}
+
+\texttt{\ 65.00}
+
+\texttt{double('a')}
+
+\texttt{ans =}
+
+\texttt{\ 97.00}
+
+\texttt{x=randn(3,1) \% generates normal random numbers}
+
+\texttt{x =}
+
+\texttt{\ 0.53}
+
+\texttt{\ 0.22}
+
+\texttt{\ -0.92}
+
+\texttt{str1 = num2str(min(x)) \% a first string}
+
+\texttt{str1 =}
+
+\texttt{-0.9219}
+
+\texttt{str2 = num2str(max(x)) \% another one}
+
+\texttt{str2 =}
+
+\texttt{0.52874}
+
+\texttt{disp(str1); \%only strings can get displayed with disp}
+
+\texttt{-0.9219}
+
+\texttt{['from smallest ' str1 ' to largest ' str2] }
+
+\texttt{ans =}
+
+\texttt{from smallest -0.9219 to largest 0.52874}
+
+\texttt{s=num2str(min(x),12) \% more decimals}
+
+\texttt{s =}
+
+\texttt{-0.921901624356}
+
+\texttt{['now display 12 decimals ',s]}
+
+\texttt{ans =}
+
+\texttt{now display 12 decimals -0.921901624356}
+
+\texttt{str = '12.3389e-1';}
+
+\texttt{val = str2num(str) \% goes from string to real}
+
+\texttt{val =}
+
+\texttt{\ 1.23}
+
+\texttt{val+12}
+
+\texttt{ans =}
+
+\texttt{\ 13.23}
+
+\texttt{\% do not confuse with cells. These are structures.}
+
+\texttt{\% cells can be useful for collecting output from a function}
+
+\texttt{A=\{[1; 2] 'I scream for ice cream' \}}
+
+\texttt{A = }
+
+\texttt{\ [2x1 double] [1x22 char]}
+
+\texttt{A\{1,1\}}
+
+\texttt{ans =}
+
+\texttt{\ 1.00}
+
+\texttt{\ 2.00}
+
+\texttt{A\{1,2\}}
+
+\texttt{ans =}
+
+\texttt{I scream for ice cream}
+
+\texttt{\TEXTsymbol{>}\TEXTsymbol{>} }
+
+Comments: \%
+
+Lines that are too: long use three points and continue on the next line ...
+
+\bigskip
+
+\subsubsection{some math functions}
+
+\textbf{learning2.m}
+
+\texttt{A=[1 2 3; 1 2 3]}
+
+\texttt{A =}
+
+\texttt{\ 1 2 3}
+
+\texttt{\ 1 2 3}
+
+\texttt{rank(A) \%rank of A}
+
+\texttt{ans =}
+
+\texttt{\ 1}
+
+\texttt{B=[1 2; 3 4]}
+
+\texttt{B =}
+
+\texttt{\ 1 2}
+
+\texttt{\ 3 4}
+
+\texttt{rank(B)}
+
+\texttt{ans =}
+
+\texttt{\ 2}
+
+\texttt{det(B) \%determinant}
+
+\texttt{ans =}
+
+\texttt{\ -2}
+
+\texttt{trace(B) \%trace}
+
+\texttt{ans =}
+
+\texttt{\ 5}
+
+\texttt{[V,D] = eig(B) \%eigen vectors and eigen values}
+
+\texttt{V =}
+
+\texttt{\ -0.82456484013239 -0.41597355791928}
+
+\texttt{\ 0.56576746496899 -0.90937670913212}
+
+\texttt{D =}
+
+\texttt{\ -0.37228132326901 0}
+
+\texttt{\ 0 5.37228132326901}
+
+\texttt{[B*V(:,1) D(1,1)*V(:,1)] \%verification that B v\_1= lda\_1 v\_1}
+
+\texttt{ans =}
+
+\texttt{\ 0.30697008980559 0.30697008980559}
+
+\texttt{\ -0.21062466052121 -0.21062466052121}
+
+\texttt{inv(B)}
+
+\texttt{ans =}
+
+\texttt{\ -2.00000000000000 1.00000000000000}
+
+\texttt{\ 1.50000000000000 -0.50000000000000}
+
+\texttt{c=[3; 4]}
+
+\texttt{c =}
+
+\texttt{\ 3}
+
+\texttt{\ 4}
+
+\texttt{inv(B)*c \% one way to compute}
+
+\texttt{ans =}
+
+\texttt{\ -2.00000000000000}
+
+\texttt{\ 2.50000000000000}
+
+\texttt{\% a much better way to go (for numerical precision)}
+
+\texttt{B\TEXTsymbol{\backslash}c}
+
+\texttt{ans =}
+
+\texttt{\ -2.00000000000000}
+
+\texttt{\ 2.50000000000000}
+
+\texttt{E=eye(2)}
+
+\texttt{E =}
+
+\texttt{\ 1 0}
+
+\texttt{\ 0 1}
+
+\texttt{\% if one needs to invert B use (faster + more precise)}
+
+\texttt{B\TEXTsymbol{\backslash}E}
+
+\texttt{ans =}
+
+\texttt{\ -2.00000000000000 1.00000000000000}
+
+\texttt{\ 1.50000000000000 -0.50000000000000}
+
+\texttt{\% condition number (ratio of largest to smallest eigenvalue)}
+
+\texttt{\% if larger than 30'000 be careful when invering matrix}
+
+\texttt{cond(B)}
+
+\texttt{ans =}
+
+\texttt{\ 14.93303437365927}
+
+\texttt{C=[1 2; 0.9999 2.0001]}
+
+\texttt{C =}
+
+\texttt{\ 1.00000000000000 2.00000000000000}
+
+\texttt{\ 0.99990000000000 2.00010000000000}
+
+\texttt{cond(C)}
+
+\texttt{ans =}
+
+\texttt{\ 3.333400003665147e+004}
+
+\texttt{\%Choleski decomposition matrix must be positive definite}
+
+\texttt{B=[1 0.1; 0.1 3]}
+
+\texttt{B =}
+
+\texttt{\ 1.00000000000000 0.10000000000000}
+
+\texttt{\ 0.10000000000000 3.00000000000000}
+
+\texttt{X=chol(B)}
+
+\texttt{X =}
+
+\texttt{\ 1.00000000000000 0.10000000000000}
+
+\texttt{\ 0 1.72916164657906}
+
+\texttt{X'*X \%verification}
+
+\texttt{ans =}
+
+\texttt{\ 1.00000000000000 0.10000000000000}
+
+\texttt{\ 0.10000000000000 3.00000000000000}
+
+\bigskip
+
+The usual set of trigonometric functions works
+
+sin, cos, tan, cot, sinh, cosh, tanh, coth, asin, acos, atan, acot, and
+arc-hyperbolic functions.
+
+Further functions
+
+\bigskip 
+\begin{tabular}{ll|ll}
+name & instruction & name & instruction \\ 
+Exponential & exp & Round towards plus infinity & ceil \\ 
+Natural logarithm & log & Round towards nearest integer & round \\ 
+Base 2 logarithm & log2 & Modulus & mod \\ 
+(base 10) logarithm & log10 & Signum & sign \\ 
+Square root & sqrt & Prime factors & factor \\ 
+Absolute value & abs & Factorial function & factorial \\ 
+Complex conjugate & conj & Greatest common divisor & gcd \\ 
+Complex number & complex & True for prime numbers & isprime \\ 
+Phase angle & angle & Least common multiple & lcm \\ 
+Imaginary unit & i ou j & Choose k among N & nchoosek \\ 
+Complex imaginary part & imag & All possible permutations & perms \\ 
+True for real array & isreal & Generate list of prime numbers & primes \\ 
+Complex real part & real &  &  \\ 
+Round towards zero & fix &  &  \\ 
+Round towards minus infinity & floor &  & 
+\end{tabular}
+
+\bigskip Some generally useful functions (also for elementary statistics)
+
+\begin{tabular}{ll|ll}
+name & instruction & name & instruction \\ 
+Cumulative product & cumprod & Product of array elts. & prod \\ 
+Cumulative sum & cumsum & Sort elements in ascd. order & sort \\ 
+Cum. trapezoidal num. integration & cumtrapz & Sort rows in ascd. order & 
+sortrows \\ 
+Maximum elt. of array (also index) & max & Standard deviation & std \\ 
+Average = mean of arrays & mean & Sum of array elements & sum \\ 
+Median value of arrays & median & Trapezoidal num. integ. & trapz \\ 
+Minimum elt. of array (also index) & min & Variance & var \\ 
+Differences & diff & Numerical gradient & gradient \\ 
+Correlation coefficients & Correlation & Covariance matrix & cov%
+\end{tabular}
+
+\subsubsection{Mathematical operators}
+
++ \ \ - \ * \ / \ \ \ \ \%addition, subtraction, multiplication, division
+
+' \ \ \% \ ! \ \ \symbol{94}\ \ \ \ \%transpose, moduls division, factional,
+exponentiation
+
+\subsubsection{Relational operators}
+
+\begin{tabular}{cccccc}
+== & \symbol{126}= & \TEXTsymbol{>} & \TEXTsymbol{<} & \TEXTsymbol{>}= & 
+\TEXTsymbol{<}= \\ 
+equal & 
+\begin{tabular}{c}
+not \\ 
+equal%
+\end{tabular}
+& 
+\begin{tabular}{c}
+greater \\ 
+than%
+\end{tabular}
+& 
+\begin{tabular}{c}
+less \\ 
+than%
+\end{tabular}
+& 
+\begin{tabular}{c}
+greater or \\ 
+equal%
+\end{tabular}
+& 
+\begin{tabular}{c}
+less or \\ 
+equal%
+\end{tabular}%
+\end{tabular}
+
+A=5 \ is not the same as A==5;
+
+\subsubsection{Logical operators}
+
+\& AND
+
+\TEXTsymbol{\vert} OR
+
+\symbol{126} NON
+
+xor
+
+Sometimes a true condition corresponds to 1. Matlab\ does not always adhere
+to this because of rounding error.
+
+\subsection{Programming}
+
+Edit a filename: Ex. gmm1.m
+
+good habit$\rightarrow \qquad $\ *.m\qquad \qquad program file\qquad
+
+\qquad \qquad \qquad \qquad *.txt \ \ \ \ \ \ \ \qquad data file
+
+\qquad \qquad \qquad \qquad *.dat\qquad \qquad data file
+
+\qquad \qquad \qquad \qquad *.asc\qquad \qquad data file
+
+\qquad \qquad \qquad \qquad *.src \qquad\ \ \ \ \ \ source codes
+
+\bigskip
+
+further good habits$\rightarrow \qquad \ \ $i,j,k,l $\rightarrow $ index
+variables
+
+\qquad \qquad \qquad \qquad \qquad \qquad small $\rightarrow $letters scalar
+
+\qquad \qquad \qquad \qquad \qquad \qquad capital $\rightarrow $ letters
+matrices
+
+notice that a and A are not the same thing for Matlab
+
+\_A \ \ \ \ underscore\ as a first letter is not allowed
+
+3A not allowed. A3=2. This is allowed
+
+\bigskip
+
+\subsubsection{A first 'official' program to illustrate input/output}
+
+Create a database in Excel. Save it as an ascii file my2.txt. Use tabulation
+as operator.
+
+{\small \qquad \qquad 1\qquad 6.7\qquad 2.33}
+
+{\small \qquad \qquad 2\qquad 8.9\qquad 1.25}
+
+{\small \qquad \qquad 3 \qquad 3.3\qquad 8.7}
+
+{\small \qquad \qquad 4\qquad 8.7\qquad 9.3}
+
+{\small \qquad \qquad 5\qquad 2.3 \ \ \ \ \ 10.33}
+
+{\small \qquad \qquad 6\qquad 2.99 \ \ \ 15}
+
+\bigskip
+
+Matlab is as good (or as bad) as other programs at reading files. If you
+have an Excel file, then the easiest is to use something like
+
+\texttt{A = xlsread('filename').}
+
+\bigskip The following program performs some basic input/output.
+
+\texttt{\ function learning3()}
+
+\texttt{\ \% learning3.m}
+
+\texttt{\ \% a first matlab function}
+
+\texttt{\ \% loads some ascii data, }
+
+\texttt{\ \% creates with that data a Matlab dataset. Loads data and
+displays it}
+
+\texttt{\ \%}
+
+\texttt{\ clc;}
+
+\texttt{\ fid = fopen('d:\TEXTsymbol{\backslash}\TEXTsymbol{\backslash}rocky%
+\TEXTsymbol{\backslash}\TEXTsymbol{\backslash}my2.txt','r')}
+
+\texttt{\ [A,T] = fscanf(fid,'\%f \%f \%f'); \% notice: no missing values
+allowed}
+
+\texttt{\ fclose(fid);}
+
+\texttt{\ }
+
+\texttt{\ format short;}
+
+\texttt{\ A(1:3)}
+
+\texttt{\ A(end-2:end)}
+
+\texttt{\ disp('T');}
+
+\texttt{\ T}
+
+\texttt{\ x=reshape(A,3,T/3)' \%create 3 rows then transpose Each unit has
+T/3 elements}
+
+\texttt{\ x}
+
+\texttt{\ }
+
+\texttt{\ \% now writes data into a new file}
+
+\texttt{\ disp('Save data into file');}
+
+\texttt{\ save 'd:\TEXTsymbol{\backslash}finbox\TEXTsymbol{\backslash}my2' x;%
+}
+
+\texttt{\ whos}
+
+\texttt{\ clear;}
+
+\texttt{\ disp('whos after clear')}
+
+\texttt{\ whos}
+
+\texttt{\ load 'd:\TEXTsymbol{\backslash}finbox\TEXTsymbol{\backslash}my2' x}
+
+\texttt{\ x}
+
+\texttt{\ }
+
+\texttt{\ \% save as an ascii file }
+
+\texttt{\ fid = fopen('d:\TEXTsymbol{\backslash}\TEXTsymbol{\backslash}finbox%
+\TEXTsymbol{\backslash}\TEXTsymbol{\backslash}my2.txt','w');}
+
+\texttt{\ fprintf(fid,'\%5.0f \%8.3f \%8.3f \TEXTsymbol{\backslash}n',x);
+\%don't forget the \TEXTsymbol{\backslash}n}
+
+\texttt{\ \% notice \TEXTsymbol{\backslash}n is readable under word but not
+under wordpad...}
+
+\texttt{\ fclose(fid);}
+
+\bigskip
+
+Running this file produces
+
+\texttt{fid =}
+
+\texttt{\ 3}
+
+\texttt{ans =}
+
+\texttt{\ 1.0000}
+
+\texttt{\ 6.7000}
+
+\texttt{\ 2.3300}
+
+\texttt{ans =}
+
+\texttt{\ 6.0000}
+
+\texttt{\ 2.9900}
+
+\texttt{\ 15.0000}
+
+\texttt{T}
+
+\texttt{T =}
+
+\texttt{\ 18}
+
+\texttt{x =}
+
+\texttt{\ 1.0000 6.7000 2.3300}
+
+\texttt{\ 2.0000 8.9000 1.2500}
+
+\texttt{\ 3.0000 3.3000 8.7000}
+
+\texttt{\ 4.0000 8.7000 9.3000}
+
+\texttt{\ 5.0000 2.3000 10.3000}
+
+\texttt{\ 6.0000 2.9900 15.0000}
+
+\texttt{Save data into file}
+
+\texttt{\ Name Size Bytes Class}
+
+\texttt{\ A 18x1 144 double array}
+
+\texttt{\ T 1x1 8 double array}
+
+\texttt{\ ans 3x1 24 double array}
+
+\texttt{\ fid 1x1 8 double array}
+
+\texttt{\ x 6x3 144 double array}
+
+\texttt{Grand total is 41 elements using 328 bytes}
+
+\bigskip
+
+\texttt{whos after clear}
+
+\bigskip
+
+\texttt{x =}
+
+\texttt{\ 1.0000 6.7000 2.3300}
+
+\texttt{\ 2.0000 8.9000 1.2500}
+
+\texttt{\ 3.0000 3.3000 8.7000}
+
+\texttt{\ 4.0000 8.7000 9.3000}
+
+\texttt{\ 5.0000 2.3000 10.3000}
+
+\texttt{\ 6.0000 2.9900 15.0000}
+
+\subsubsection{Conditional branching}
+
+\bigskip
+
+\texttt{for m = 1:k}
+
+\qquad \texttt{for n = 1:k}
+
+\qquad \qquad \texttt{if m == n}
+
+\qquad \qquad \qquad \texttt{a(m,n) = 2;}
+
+\qquad \qquad \texttt{elseif abs(m-n) == 2}
+
+\qquad \qquad \qquad \texttt{a(m,n) = 1;}
+
+\qquad \qquad \texttt{else}
+
+\qquad \qquad \qquad \texttt{a(m,n) = 0;}
+
+\texttt{\ \qquad \qquad end}
+
+\texttt{\ \qquad end}
+
+\texttt{end}
+
+For k=5 you get the matrix
+
+\texttt{a =}
+
+\texttt{\ 2 0 1 0 0}
+
+\texttt{\ 0 2 0 1 0}
+
+\texttt{\ 1 0 2 0 1}
+
+\texttt{\ 0 1 0 2 0}
+
+\texttt{\ 0 0 1 0 2}
+
+\subsubsection{A really small test}
+
+If condition
+
+\qquad do something;
+
+end
+
+notice the (non)-use of ;
+
+Tests may be nested.
+
+\subsubsection{While/Until loops}
+
+while condition
+
+\qquad do something;
+
+end
+
+Illustration
+
+\textbf{WhileEx.m}
+
+\texttt{i=1;}
+
+\texttt{while i\TEXTsymbol{<}10}
+
+\texttt{\ [i i\symbol{94}2]}
+
+\texttt{\ i=i+1;}
+
+\texttt{end}
+
+\texttt{Res=[];}
+
+\texttt{A=zeros(10,1);}
+
+\texttt{for x=1:0.1:2}
+
+\texttt{\ Res=[Res; [x x\symbol{94}2]]; \% only ok for short series else
+pre-declare size}
+
+\texttt{\ A(floor(x*10),:)=x}
+
+\texttt{end}
+
+\texttt{Res}
+
+\texttt{disp('A');}
+
+\texttt{A}
+
+\bigskip
+
+Remark: Until (of some other languages) can always be recoded as while$%
+\Leftrightarrow $ Matlab only implements while.
+
+The loop is tested before it is executed $\rightarrow $\ loop may not be
+executed at all.
+
+if condition depends on something affected within loop, the programmer must
+ensure that he does not forget ''something''. This is a typical source of
+error getting your program to run for ever.
+
+\subsubsection{For loops}
+
+\textbf{loops.m}
+
+\texttt{k=3; Res=[];}
+
+\texttt{for m = 1:k}
+
+\texttt{\qquad Res=[Res;[m m\symbol{94}2]];}
+
+\texttt{end}
+
+produces
+
+\texttt{Res =}
+
+\texttt{\ 1 1}
+
+\texttt{\ 2 4}
+
+\texttt{\ 3 9}
+
+$\rightarrow $It's much faster than while
+
+$\rightarrow $Requires that number of steps are known \ \ \ 
+
+The instruction break may be used to get out of a for or a while loop.\ \ \ 
+
+\subsubsection{Function evaluations}
+
+involvs \textbf{fcall.m} and \textbf{do\_more\_Comput.m}
+
+\texttt{function fcall()}
+
+\texttt{\ \% illustrates how to nest functions and local/globalness of
+variables}
+
+\texttt{\ global c}
+
+\texttt{\ a=2}
+
+\texttt{\ b=3}
+
+\texttt{\ c=10}
+
+\texttt{\ }
+
+\texttt{\ [x,y]=do\_Comput(a,b) \%here involves two elements that are
+returned}
+
+\texttt{\ }
+
+\texttt{\ function [f,g]=do\_Comput(a,b);}
+
+\texttt{\ global c}
+
+\texttt{\ f=a\symbol{94}2+c; }
+
+\texttt{\ g=a*b*c;}
+
+\bigskip
+
+this produces
+
+\texttt{a =}
+
+\texttt{\ 2}
+
+\texttt{b =}
+
+\texttt{\ 3}
+
+\texttt{c =}
+
+\texttt{\ 10}
+
+\texttt{x =}
+
+\texttt{\ 14}
+
+\texttt{y =}
+
+\texttt{\ 60}
+
+Sometimes you wish to develop a general program such as an optimizer (see a
+bit later) or a module that is very general and that you wish to run on many
+functions (think about a Max Lik program). In that case, you have to provide
+the name of a function. This can be achieved via \texttt{@function\_name} at
+the level of the calling program and via \texttt{feval(function\_name)} at
+the function level.
+
+\textbf{showeval.m}
+
+\texttt{function showeval()}
+
+\texttt{\% illustrates how 'feval' operates}
+
+\texttt{\% here compute gradients for two trivial functions at trivial points%
+}
+
+\texttt{x=1.0;}
+
+\texttt{grad(@f,x) \% evaluates grandient of f at x}
+
+\texttt{grad(@g,x)}
+
+\texttt{function y=f(x);}
+
+\texttt{y=x\symbol{94}2;}
+
+\texttt{function y=g(x)}
+
+\texttt{y=x\symbol{94}3;}
+
+\texttt{function gr=grad(fnam,x)}
+
+\texttt{h=0.0000001;}
+
+\texttt{f1=feval(fnam,x);}
+
+\texttt{f2=feval(fnam,x+h);}
+
+\texttt{gr=(f2-f1)/h}
+
+\subsection{\protect\bigskip Using the optimizer}
+
+\bigskip \textbf{Optim\_Ilustrate.m}
+
+\texttt{function Optim\_Ilustrate()}
+
+\texttt{\% illustrates how to use the optimization package}
+
+\texttt{clc;}
+
+\texttt{options = optimset('MaxFunEvals', 1000, ...}
+
+\texttt{'TolFun', 1e-5,...}
+
+\texttt{\ 'TolX', 1e-5,...}
+
+\texttt{'LargeScale','off',...}
+
+\texttt{'Diagnostics','on',...}
+
+\texttt{'Display','iter');}
+
+\texttt{beta0=[1 2]; \% starting values}
+
+\texttt{A=3;}
+
+\texttt{[beta,Qmin,exitflag] = fminunc(@obj\_func,beta0,options,A);}
+
+\texttt{disp('the optimum is');}
+
+\texttt{beta}
+
+\texttt{disp('whereas it should be ');}
+
+\texttt{[A;-1]}
+
+\texttt{function z=obj\_func(beta,A);}
+
+\texttt{x=beta(1);}
+
+\texttt{y=beta(2);}
+
+\texttt{z=(x-A)\symbol{94}2+(y+1)\symbol{94}2;}
+
+running this program produces:
+
+\texttt{\TEXTsymbol{>} In C:\TEXTsymbol{\backslash}MATLAB6p1\TEXTsymbol{%
+\backslash}toolbox\TEXTsymbol{\backslash}optim\TEXTsymbol{\backslash}private%
+\TEXTsymbol{\backslash}diagnose.m at line 20}
+
+\texttt{\ In C:\TEXTsymbol{\backslash}MATLAB6p1\TEXTsymbol{\backslash}toolbox%
+\TEXTsymbol{\backslash}optim\TEXTsymbol{\backslash}fminunc.m at line 221}
+
+\texttt{\ In D:\TEXTsymbol{\backslash}finbox\TEXTsymbol{\backslash}%
+Learning4.m at line 12}
+
+\texttt{Number of variables: 2}
+
+\texttt{Functions }
+
+\texttt{\ Objective: obj\_func}
+
+\texttt{\ Gradient: finite-differencing}
+
+\texttt{\ Hessian: finite-differencing (or Quasi-Newton)}
+
+\texttt{\ }
+
+\texttt{Algorithm selected}
+
+\texttt{\ medium-scale: Quasi-Newton line search}
+
+\texttt{\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%%
+\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%}
+
+\texttt{\ End diagnostic information }
+
+\texttt{\ Directional }
+
+\texttt{\ Iteration Func-count f(x) Step-size derivative }
+
+\texttt{\ 1 2 13 0.5 -52 }
+
+\texttt{\ 2 8 3.22214e-017 0.5 2.62e-009 }
+
+\texttt{\ }
+
+\texttt{Optimization terminated successfully:}
+
+\texttt{\ Search direction less than 2*options.TolX}
+
+\texttt{the optimum is}
+
+\texttt{beta =}
+
+\texttt{\ 3.0000 -1.0000}
+
+\texttt{whereas it should be }
+
+\texttt{ans =}
+
+\texttt{\ 3}
+
+\texttt{\ -1}
+
+\texttt{\bigskip }
+
+Notice: a function can only be nested within a function
+
+\textbf{Compilation mcc -x filename}
+
+\subsubsection{Efficient programming}
+
+Matlab procedures which are rationalized exist for an incredible number of
+situations.
+
+\qquad - these procedures are pre-tested. Keeps your programming fast
+
+\qquad - procedures are vectorized. They are much faster than loops for
+instance.
+
+\qquad - Time your loops using tic toc
+
+\qquad - Always put the largest loop as most innermost\ loop.
+
+\qquad - Declare repeated operations outside loop (for instance if you need
+to compute a loop involving i*gamma(3) where i is some increment, then it
+would be too costly to evaluate in each loop the gamma function. Compute out
+of the loop g=gamma(3) and use in the loop i*g.
+
+Declare place holders rather than using concatenation. For instance use
+
+\texttt{nh=n/2;}
+
+\texttt{np1h=(n+1)/2;}
+
+\texttt{y=zeros(T,1);}
+
+\texttt{j=1;}
+
+\texttt{while j\TEXTsymbol{<}=T \% notice, here there is not need for a ;}
+
+\texttt{\qquad y(j)=gamma(nh\symbol{94}j)/gamma(np1h\symbol{94}j)*x(j); \% x
+defined elsewhere }
+
+\texttt{\qquad j=j+1;}
+
+\texttt{end \%again no need for a ;}
+
+which is much faster than
+
+\texttt{j=1;}
+
+\texttt{y=[];}
+
+\texttt{while j\TEXTsymbol{<}=T}
+
+\texttt{\qquad y=[y; (gamma(n/2)\symbol{94}j)/gamma(((n+1)/2)\symbol{94}%
+j)*x(j)]; \qquad }
+
+\texttt{\qquad j=j+1;}
+
+\texttt{end}
+
+Other example
+
+\textbf{speed.m}
+
+\section{The graphics module}
+
+\subsection{\protect\bigskip Basic graphs (and more general programming)}
+
+The following program is contained in \textbf{ElemStats.m}
+
+\texttt{\TEXTsymbol{>}\TEXTsymbol{>} }
+
+\texttt{echo on}
+
+\texttt{u=randn(5,2) \% 5 uniform random numbers in two columns}
+
+\texttt{u =}
+
+\texttt{\ -0.0132 1.7701}
+
+\texttt{\ -0.5803 0.3255}
+
+\texttt{\ 2.1363 -1.1190}
+
+\texttt{\ -0.2576 0.6204}
+
+\texttt{\ -1.4095 1.2698}
+
+\texttt{u(:,2)=u(:,1)+0.3*u(:,2)}
+
+\texttt{u =}
+
+\texttt{\ -0.0132 0.5179}
+
+\texttt{\ -0.5803 -0.4826}
+
+\texttt{\ 2.1363 1.8006}
+
+\texttt{\ -0.2576 -0.0715}
+
+\texttt{\ -1.4095 -1.0286}
+
+\texttt{plot(u(:,1),u(:,2),'s',...}
+
+\texttt{\ 'MarkerEdgeColor','k',...}
+
+\texttt{\ 'MarkerFaceColor','g',...}
+
+\texttt{\ 'MarkerSize',10)}
+
+\texttt{title('scatterplot of u(:,1) against u(:,2)');}
+
+\texttt{\% in the plot instruction 's' means symbols="Marker"}
+
+\texttt{[ma,ma\_idx]=max(u)}
+
+\texttt{ma =}
+
+\texttt{\ 2.1363 1.8006}
+
+\texttt{ma\_idx =}
+
+\texttt{\ 3 3}
+
+\texttt{max(u) \% notice that Matlab functions are overloaded}
+
+\texttt{ans =}
+
+\texttt{\ 2.1363 1.8006}
+
+\texttt{[mi,mi\_idx]=min(u)}
+
+\texttt{mi =}
+
+\texttt{\ -1.4095 -1.0286}
+
+\texttt{mi\_idx =}
+
+\texttt{\ 5 5}
+
+\texttt{mu=mean(u)}
+
+\texttt{mu =}
+
+\texttt{\ -0.0249 0.1471}
+
+\texttt{sum(u)/size(u,1)}
+
+\texttt{ans =}
+
+\texttt{\ -0.0249 0.1471}
+
+\texttt{median(u)}
+
+\texttt{ans =}
+
+\texttt{\ -0.2576 -0.0715}
+
+\texttt{sort(u)}
+
+\texttt{ans =}
+
+\texttt{\ -1.4095 -1.0286}
+
+\texttt{\ -0.5803 -0.4826}
+
+\texttt{\ -0.2576 -0.0715}
+
+\texttt{\ -0.0132 0.5179}
+
+\texttt{\ 2.1363 1.8006}
+
+\texttt{sortrows(u)}
+
+\texttt{ans =}
+
+\texttt{\ -1.4095 -1.0286}
+
+\texttt{\ -0.5803 -0.4826}
+
+\texttt{\ -0.2576 -0.0715}
+
+\texttt{\ -0.0132 0.5179}
+
+\texttt{\ 2.1363 1.8006}
+
+\texttt{uu = u - kron( mu, ones(size(u,1),1)); \%this is truly stupid}
+
+\texttt{mean( uu.\symbol{94}2 )}
+
+\texttt{ans =}
+
+\texttt{\ 1.3901 0.9396}
+
+\texttt{T=size(u,1);}
+
+\texttt{mean(uu.\symbol{94}2)*(T-1)/T}
+
+\texttt{ans =}
+
+\texttt{\ 1.1121 0.7517}
+
+\texttt{v=var(u)}
+
+\texttt{v =}
+
+\texttt{\ 1.7377 1.1745}
+
+\texttt{sqrt(v)}
+
+\texttt{ans =}
+
+\texttt{\ 1.3182 1.0838}
+
+\texttt{std(u)}
+
+\texttt{ans =}
+
+\texttt{\ 1.3182 1.0838}
+
+\texttt{mu=0.1;}
+
+\texttt{sig=0.2;}
+
+\texttt{S0=100;}
+
+\texttt{x=mu+sig*u;}
+
+\texttt{x1=exp(x);}
+
+\texttt{x1=[ones(1,2); x1]; \% first observation}
+
+\texttt{St1=100*cumprod(x1)}
+
+\texttt{St1 =}
+
+\texttt{\ 100.0000 100.0000}
+
+\texttt{\ 110.2262 122.5772}
+
+\texttt{\ 108.4709 123.0045}
+
+\texttt{\ 183.7808 194.8715}
+
+\texttt{\ 192.9093 212.3079}
+
+\texttt{\ 160.8246 191.0087}
+
+\texttt{x=[zeros(1,2); x]; \% again for first observation}
+
+\texttt{St2=100*exp(cumsum(x))}
+
+\texttt{St2 =}
+
+\texttt{\ 100.0000 100.0000}
+
+\texttt{\ 110.2262 122.5772}
+
+\texttt{\ 108.4709 123.0045}
+
+\texttt{\ 183.7808 194.8715}
+
+\texttt{\ 192.9093 212.3079}
+
+\texttt{\ 160.8246 191.0087}
+
+\texttt{A=[1 2 3; 2 2 4; 2 1 2]}
+
+\texttt{A =}
+
+\texttt{\ 1 2 3}
+
+\texttt{\ 2 2 4}
+
+\texttt{\ 2 1 2}
+
+\texttt{prod(A)}
+
+\texttt{ans =}
+
+\texttt{\ 4 4 24}
+
+\texttt{cumprod(A)}
+
+\texttt{ans =}
+
+\texttt{\ 1 2 3}
+
+\texttt{\ 2 4 12}
+
+\texttt{\ 4 4 24}
+
+\texttt{dx=0.1}
+
+\texttt{dx =}
+
+\texttt{\ 0.1000}
+
+\texttt{x=-5:dx:5; \% some fine grid}
+
+\texttt{y=1/sqrt(2*pi)*exp(-0.5*x.\symbol{94}2);}
+
+\texttt{figure(1)}
+
+\texttt{subplot(2,1,1)}
+
+\texttt{plot(x,y);}
+
+\texttt{cdf=cumtrapz(y)*dx;}
+
+\texttt{subplot(2,1,2)}
+
+\texttt{plot(x,cdf);}
+
+\texttt{trapz(y)*dx}
+
+\texttt{ans =}
+
+\texttt{\ 1.0000}
+
+\FRAME{ftbpF}{5.348in}{4.0171in}{0pt}{}{}{Figure}{\special{language
+"Scientific Word";type "GRAPHIC";maintain-aspect-ratio TRUE;display
+"USEDEF";valid_file "T";width 5.348in;height 4.0171in;depth
+0pt;original-width 5.2918in;original-height 3.9686in;cropleft "0";croptop
+"1";cropright "1";cropbottom "0";tempfilename
+'I31W8Z00.bmp';tempfile-properties "XPR";}}
+
+\subsection{Another graphical example}
+
+\texttt{\%\textbf{Graphcapa}.m}
+
+\texttt{\% illustrates graphical capabilities}
+
+\texttt{x=randn(10,1);}
+
+\texttt{plot(x,'--+'); \% plots x against time}
+
+\texttt{axis([0 13 -3 3]);}
+
+\texttt{title('a nice simulation')}
+
+\texttt{xlabel('time goes by')}
+
+\texttt{ylabel('the realizations')}
+
+\texttt{legend('name of curve')}
+
+\texttt{text(8,-2,'Right lower corner');}
+
+\subsection{\protect\bigskip More advanced issues}
+
+clc clears command window
+
+clf clears current graphics window
+
+hold on / hold off to superpose plots
+
+subplot(m,n,p) splits graphics window into m rows and n celles. p
+corresponds to the number of subplot.
+
+how to glue a figure into word-processor
+
+\bigskip
+
+Object oriented stuff: get/set
+
+get try \texttt{get(0)} in command window
+
+\bigskip
+
+\texttt{\% \textbf{plot2.m} again a plot}
+
+\texttt{\%}
+
+\texttt{x=randn(10,1);}
+
+\texttt{y=1+0.2*randn(10,1);}
+
+\texttt{plot(x,y)}
+
+\texttt{get(gcf,'Position') \%gcf is generic graphics window handle}
+
+\end{document}

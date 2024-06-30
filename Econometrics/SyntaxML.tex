@@ -1,0 +1,172 @@
+
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{eurosym}
+\usepackage{amsmath}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.00.0.2552}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{Created=Thursday, December 14, 2000 09:16:34}
+%TCIDATA{LastRevised=Tuesday, March 23, 2004 18:30:43}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Articles\SW\Elbert Walker's">}
+%TCIDATA{Language=American English}
+%TCIDATA{CSTFile=LaTeX article (bright).cst}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\def\Pr{\mbox{Pr}}
+\def\V{\mbox{V}}
+\def\Cov{\mbox{Cov}}
+\def\E{\mbox{E}}
+\def\C{\mbox{C}}
+\def\Var{\mbox{Var}}
+\def\R{\underline{R}}
+\def\x{\underline{x}}
+\def\S{\underline{S}}
+\def\1{\mbox{{\bf 1\kern-.24em{I}}}}
+\def\R{R}
+\def\SE{\mbox{SE}}
+\def\Sk{\mbox{Sk}}
+\def\Ku{\mbox{Ku}}
+\def\Rc{{\cal R}}
+\def\G#1#2{\Gamma\left(\frac{#1}{#2}\right)}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\evensidemargin}{-1cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\textheight}{3cm}
+\renewcommand{\baselinestretch}{1.4}
+\input{tcilatex}
+
+\begin{document}
+
+\title{FAME: Applied Econometrics\\
+ML Syntax\ \ \ \ }
+\author{Michael Rockinger}
+\date{23.March.04}
+\maketitle
+
+\section{Description of the syntax of the maximum likelihood module}
+
+[beta,stderr,vc,logl]=Max\_lik(lik\_fct,b0,vc%
+\_type,A,b,Aeq,beq,lb,ub,nonlcon,options,varargin);
+
+\section{Description}
+
+This module performs the estimation of a parameter vector via maximum
+likelihood. This estimation is largely built around the Matlab procedure
+that computes constrained minimization named fmincon. Many of the parameters
+need to be provided to that optimizer.
+
+\section{Input parameters}
+
+\textbf{lik\_fct} a function handle
+
+\textbf{b0} the initial values
+
+\textbf{vc\_type} instructions which variance-covariance matrix to
+implement. Currently available procedures are Hessian and White's Sandwiched
+method.
+
+the next set of parameters is feed to the optimizer. We use the optimizer in
+its most general way.
+
+\subsection{fmincon}
+
+The optimizer gets called with:
+
+\begin{equation*}
+\text{fmincon(fun,x0,A,b,Aeq,beq,lb,ub,nonlcon,options,P1,P2,...)}
+\end{equation*}
+
+fmincon finds the constrained minimum of a scalar function of several
+variables starting at an initial estimate. This is generally referred to as
+constrained nonlinear optimization or nonlinear programming.
+
+fmincon starts at \textbf{x0} and finds a minimum \textbf{x} to the function
+described in \textbf{fun} subject to the linear inequalities \textbf{A}*x 
+\TEXTsymbol{<}= \textbf{b}. x0 can be a scalar, vector, or matrix. It is
+possible to minimize \textbf{fun} subject to the linear equalities \textbf{%
+Aeq}*x = \textbf{beq} as well as A*x \TEXTsymbol{<}= b. Set A=[] and b=[] if
+no inequalities exist. Set Aeq=[] and beq=[] if no equalities exist.
+
+\textbf{lb} and \textbf{ub} defines a set of lower and upper bounds on the
+variables, x, so that the solution is always in the range lb \TEXTsymbol{<}=
+x \TEXTsymbol{<}= ub. It is always possible to define lb and ub very large
+so that the constrained optimization can also be used for unconstrained
+optimization.
+
+nonlcon subjects the minimization to the nonlinear inequalities \textbf{c(x)}
+or equalities \textbf{ceq(x)} defined in \textbf{nonlcon}. fmincon optimizes
+such that c(x) \TEXTsymbol{<}= 0 and ceq(x) = 0. \textbf{options} minimizes
+with the optimization parameters specified in the structure \ `options'. 
+\textbf{P1,P2,...} passes the problem-dependent parameters P1, P2, etc.,
+directly to the functions fun and nonlcon. 
+
+\bigskip 
+
+[x,fval,exitflag,output,lambda,grad,hessian] = fmincon(...) returns 
+
+\textbf{x} the minimum
+
+\textbf{fval} the value of f evaluated at the minimum
+
+\textbf{exitflag} a value that describes the exit condition of fmincon.
+
+\textbf{output} a structure output with information about the optimization.
+
+\textbf{lambda} is a structure lambda whose fields contain the Lagrange
+multipliers at the solution x.
+
+\textbf{grad} returns the value of the gradient of fun at the solution x.
+
+\textbf{hessian} returns the value of the Hessian of fun at the solution x.
+
+\subsection{fun}
+
+the function to be optimized should have as a first argument the vector of
+parameters over which the optimization should be done.
+
+then the function may import a list of parameters. 
+
+It is possible to include in this list of parameters the vector of data.
+Typically this would be a vector containing $T$ observations. 
+
+fun should export the vector of log-likelihoods.
+
+\section{Output parameters}
+
+\textbf{beta} vector of parameters that maximize the log\_likelihood
+
+\textbf{stderr} vector of associated standard errors. These standard errors
+get computed either via numerical hessians or via the sandwich method.
+
+\textbf{vc} the variance covariance matricx. Again the same method as for
+stderr is used 
+
+\textbf{logl} the log-likelihood of the problem.
+
+\end{document}

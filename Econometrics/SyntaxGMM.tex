@@ -1,0 +1,123 @@
+
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amssymb}
+\usepackage{eurosym}
+\usepackage{amsmath}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.00.0.2552}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{Created=Thursday, December 14, 2000 09:16:34}
+%TCIDATA{LastRevised=Thursday, August 26, 2004 17:37:31}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Articles\SW\Elbert Walker's">}
+%TCIDATA{Language=American English}
+%TCIDATA{CSTFile=LaTeX article (bright).cst}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\def\Pr{\mbox{Pr}}
+\def\V{\mbox{V}}
+\def\Cov{\mbox{Cov}}
+\def\E{\mbox{E}}
+\def\C{\mbox{C}}
+\def\Var{\mbox{Var}}
+\def\R{\underline{R}}
+\def\x{\underline{x}}
+\def\S{\underline{S}}
+\def\1{\mbox{{\bf 1\kern-.24em{I}}}}
+\def\R{R}
+\def\SE{\mbox{SE}}
+\def\Sk{\mbox{Sk}}
+\def\Ku{\mbox{Ku}}
+\def\Rc{{\cal R}}
+\def\G#1#2{\Gamma\left(\frac{#1}{#2}\right)}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\evensidemargin}{-1cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\textheight}{3cm}
+\renewcommand{\baselinestretch}{1.4}
+\input{tcilatex}
+
+\begin{document}
+
+\title{Note GMM estimation}
+\author{Michael Rockinger}
+\maketitle
+
+\section{\protect\bigskip Introduction}
+
+In this note, you may find a short description how the code \texttt{GMM.m}
+operates. The code is still in its trial phase. If you find any instability,
+please, let me know.
+
+The syntax of this function is very similar to the one you have seen with
+the Maxlik.m function. This is logic. GMM.m involves Maxlik.m
+
+\section{Mathematical analysis}
+
+We suppose that some statistical problem can be written as%
+\begin{equation*}
+\min_{\theta }g(\theta )\Omega ^{-1}g(\theta ).
+\end{equation*}
+
+Here, $g(\theta )$ is some function mapping a $R^{p}$ vector of parameters
+into $R^{q}.$ Examples of such a function will be given below. It is assumed
+that each component of the function $g(\theta )$ is associated with a
+certain measure of precision, translated as a matrix of variance covariance.
+The minimization then states that one seeks the parameters that minimize a
+certain quadratic form where each component gets weighted by its relative
+precision.
+
+Example 1: It is possible to set OLS and IV estimation in that framework.
+Define%
+\begin{equation*}
+y_{t}=x_{t}\beta +u_{t}.
+\end{equation*}
+
+We assume that we have for each observation a certain vector of instruments,
+that is a vector of entities such that 
+\begin{equation*}
+E[z_{t}u_{t}]=0.
+\end{equation*}
+
+In many cases, the $x_{t}$ are just right. In that case, $\theta =\beta $
+and $q=1.$ We may assume that there are more instruments than elements of $%
+x_{t}.$ Asymptotically:
+
+Example 2: Estimation of an Euler equation.
+
+\section{Implementation}
+
+[ beta, stderr, covbeta, Qmin, test, ptest ] = GMM(MomFct,beta0,...
+
+A,b,Aeq,beq,lb,ub,nonlcon,options,...
+
+GMMLags,GMMiter,GMMtol1,GMMtol2,varargin);
+
+\bigskip
+
+\end{document}
