@@ -1,0 +1,252 @@
+function SempDenFTSE();
+% SemPDen.m
+%
+% computes the risk neutral densities using the approach of Abken, Madan,
+% and Ramamurtie (1996) Estimation of rsik-neutral and statistical densities
+% by Hermite polynomial approximation: With an application to Eurodollar
+% Futures Options, Atlanta FED, mimeo.
+%
+% Imposes positivity restrictions for Hermite polynomial.
+% Allows for a free estimation of mean parameter
+% Estimation for 250497 using a free mean m. Version is thus not completely
+% equal to results reported in paper.
+%
+% This program can be freely distributed, modified, improved, whatever....
+% Please, report bugs or improvements to Michael Rockinger 
+% (Michael.Rockinger@hec.unil.ch)
+% If in academic work you mention our paper
+% "Gram-Charlier densities"
+% Jondeau, E., and M. Rockinger, 2001
+% Journal of Economic Dynamic and Control
+% then it would be nice. The Hermite approximation has been developed by Abken
+% Madan, and Milne.
+% To run program, user must have sk.txt containing the skewness-kurtosis boundary
+% in the directory
+
+%%******************************************************************
+%*                   load data and set global parameters           *
+%*******************************************************************
+% load data
+load AllInfo1;
+
+% globals for skewness+kurtosis boundaries
+global ai
+global bi
+global sk
+global s6
+global s24
+
+ai = 0;
+bi = 0;
+eps = 0.0001; %distance from boundary
+s6 = sqrt(6);
+s24 = sqrt(24);
+
+[fp, msg] = fopen('D:\GerznSee\Cours2004\Exos\mfiles\SK.txt','r');
+if fp == -1
+    disp(msg)
+end
+[sk,c]=fscanf(fp,['%f %f'],[2,8001]);
+sk=sk';
+
+% verify that the boundary is correct
+% plot(sk(:,1),sk(:,2));
+
+% compute linear interpolation to improve approximation of skewness bound
+init_ab;
+
+% boundaries for kurtosis
+global kumin
+global kumax
+kumin = 0; 
+kumax = 4/s24;
+
+%******************************************************************************
+
+% some general variables
+NbStrik= 8;
+NbMat  = 5;
+NbCall = NbMat*NbStrik;
+NbPut  = NbMat*NbStrik;
+NbOpt  = NbCall+NbPut; % call and puts
+
+% extract for options of different maturities the implicit interest rate and
+% dividend ratio by using at the money options
+z=3800:50:5100; z=z'; %support for RND
+
+sempm = []; % here store final risk-neutral densities
+Param = []; % here store parameters
+for i = 1:NbMat;
+    
+S0 = AllInfo1(1,1);
+KC = AllInfo1(1+NbStrik*(i-1):NbStrik*i,2); %call option
+KP = AllInfo1(NbCall+1+NbStrik*(i-1):NbCall+NbStrik*i,2); %put option
+CPi= AllInfo1(1+NbStrik*(i-1):NbStrik*i,3);
+r  = AllInfo1(1+NbStrik*(i-1),4);
+T  = AllInfo1(1+NbStrik*(i-1),5);
+C  = AllInfo1(1+NbStrik*(i-1):NbStrik*i,6); %call option
+P  = AllInfo1(NbCall+1+NbStrik*(i-1):NbCall+NbStrik*i,6); %put option
+id = AllInfo1(1+NbStrik*(i-1),7);
+% To make further computations easier
+% convert put into call and consolidate parameters
+
+C2 = P + S0 - exp(-r*T)*KC;
+e  = S0 >= KC; % in the money options
+C  = C.*e + C2.*(1-e);
+% plot(KC,C);
+% return
+
+lb = [ 0; 0.001;  -1; 0.0001 ]; % lower bounds for parameters
+ub = [  10;    10; 3;    8   ]; %upper bounds for parameters
+b0 = [ 0.1; 0.2; -0.3;  1    ]; 
+
+options=optimset('Diagnostics','on','Display','iter','MaxFunEvals',2000,...
+     'LargeScale','off');
+
+    [b,Qmin,exitflag,output,lambda,grad,hessian] =...
+             fmincon(@obj,b0,...
+                     [],[],[],[],lb,ub,[],options,...
+                     S0,KC,CPi,r,T,C,0);
+     Param=[Param; b'];
+    % plot fit of estimation
+    % obj(b,S0,KC,CPi,r,T,C,1);
+    % pause
+    
+if exitflag<0;
+    disp('problem with convergence');
+end;
+
+b1=b;
+b1(4)=rect(b1(4),kumin,kumax);       % map kurtosis into allowed domain
+sku=interk(b1(4));                   % get upper bound for skewness
+b1(3)=rect(b1(3),-sku,sku);          % restrict skewness
+
+m  = b(1) ;
+s  = b(2);
+b0 = 1;
+b1 = 0;
+b2 = 0;
+b3 = b(3);
+b4 = b(4);
+
+% recover the traditional risk neutral density for S_T
+mu = log(S0) + (m - 0.5*s^2)*T;
+si = s*sqrt(T);
+tmp = ( log(z)-mu )/si;
+semp = 1./(si.*z).*ri_ne_de(tmp,[b0;b1;b2;b3;b4]);
+
+sempm = [sempm,semp];
+
+end; % for i
+
+SempRND=sempm;
+save SempRND;
+
+plot(z,sempm);
+title('Risk Neutral Densities for FTSE data');
+xlabel('Level of FTSE');
+ylabel('Risk Neutral Density');
+%axis([3.2 3.6 0 26]);
+
+r=rows(Param);
+for i=1:r
+    fprintf('%8.4f %8.4f %8.4f %8.4f \n',Param(i,:));
+end
+
+%*************************************************************
+
+function y = obj(b,S0,K,CPi,r,T,C,plotflag);
+% evaluation of the function that has to get minimized
+global kumin
+global kumax
+
+m = b(1);
+s = b(2);
+p0 = 1; 
+p3 = b(3); 
+p4 = b(4);
+
+p4 = rect(b(4),kumin,kumax);   % map kurtosis into allowed domain
+sku = interk(p4);              % get upper bound for skewness
+p3 = rect(b(3),-sku,sku);      % restrict skewness
+
+%set the a0,...a4 variables to what they should be
+[a0,a1,a2,a3,a4 ] = ak(m,s,T,S0,K,r); 
+dist = C - p0*a0 - p3*a3 - p4*a4;
+% impose martingale restriction
+[a0,a1,a2,a3,a4 ] = ak(m,s,T,S0,0.001,r); 
+mart = S0 - p0*a0 - p3*a3 - p4*a4;
+
+if plotflag
+    plot(dist);
+end
+y    = dist'*dist + mart^2;
+
+%******************************************************
+
+function [a0,a1,a2,a3,a4 ] = ak(m,s,T,S0,K,r);
+% returns a0, a1, a2, a3, a4 in a vector called ak
+global kumin
+global kumax
+
+%s
+%T
+%S0
+%K
+%r
+
+S0K=S0./K;
+st = s*sqrt(T);
+sp = 1/sqrt(2*pi);
+d1 = ( log(S0K) + (m + 0.5*(s^2))*T ) / st;
+d2 = d1 - st;
+f  = S0;%*exp(m*T);
+
+d1f = st*f;
+d2f = st*d1f; 
+d3f = st*d2f;
+d4f = st*d3f;
+
+n1 = sp*exp(-0.5*d1.^2);
+d1n1 = -d1.*n1; 
+d2n1 = (d1.^2-1).*n1; 
+d3n1 = (3*d1-d1.^3).*n1;
+
+n2 = sp*exp(-0.5*d2.^2); 
+d1n2 =-d2.*n2; 
+d2n2 =(d2.^2-1).*n2; 
+d3n2 =(3*d2-d2.^3).*n2;
+
+a0 = f.*cdfn(d1) - K.*exp(-r*T).*cdfn(d2);
+a1 = d1f.*cdfn(d1) + f.*n1 - K.*exp(-r*T).*n2;
+a2 = d2f*cdfn(d1) + 2*d1f*n1 + f*d1n1 - K.*exp(-r*T).*d1n2;
+a2 = a2/sqrt(2);
+a3 = d3f*cdfn(d1) + 3*d2f*n1 + 3*d1f*d1n1 + f*d2n1 - K.*exp(-r*T).*d2n2;
+a3 = a3/sqrt(6);
+a4 = d4f*cdfn(d1) + 4*d3f*n1 + 6*d2f*d1n1 + 4*d1f*d2n1 + f*d3n1 - ...
+                      K.*exp(-r*T).*d3n2;
+a4 = a4/sqrt(24);
+
+%**********************************************************************
+
+function Qz = ri_ne_de(z,b);
+% evaluates the density Q
+global kumin
+global kumax
+
+b0 = b(1); 
+b1 = b(2); 
+b2 = b(3); 
+b3 = b(4); 
+b4 = b(5);
+
+b4=rect(b(4),kumin,kumax);       %map kurtosis into allowed domain
+sku=interk(b4);                  %get upper bound for skewness
+b3=rect(b(3),-sku,sku);          % restrict skewness
+
+Qz = 1/sqrt(2*pi)*exp(-0.5*z.^2);
+Qz = Qz.*( b0- b2/sqrt(2) + 3*b4/sqrt(24)+...
+     (b1-3*b3/sqrt(6))*z+...
+     (b2/sqrt(2)-6*b4/sqrt(24))*(z.^2)+...
+      b3/sqrt(6)*(z.^3)+...
+      b4/sqrt(24)*(z.^4) );
